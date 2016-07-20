@@ -1,0 +1,68 @@
+module Main where
+
+import           Codec.Picture
+import           Codec.Picture.Types (pixelMapXY, dynamicPixelMap)
+import           Control.Monad       (liftM)
+import           System.Environment
+import Debug.Trace
+
+sow :: Pixel p => Image p -> Image p
+sow img = pixelMapXY (\x y p -> (uncurry $ pixelAt img)
+                              $ (\x -> traceShow x x) $ landscape n (x,y)
+                     ) img
+  where m = imageWidth img
+        n = imageHeight img
+
+downscaleForward :: (Int, Int) -> Maybe (Int, Int)
+downscaleForward (xOld, yOld)
+  | even (succ xOld) && even (succ yOld) = Just (xOld `div` 2, yOld `div` 2)
+  | otherwise = Nothing
+  
+landscape :: Int -> (Int, Int) -> (Int, Int)
+landscape m (xNew, yNew)
+  | otherwise = (    x,     y)
+  | xNew <= mid && yNew <= mid = (    x,     y)
+  | xNew  > mid && yNew <= mid = (n $ y,     x)
+  | xNew  > mid && yNew  > mid = (n $ x, n $ y)
+  | xNew <= mid && yNew  > mid = (    y, n $ x)
+  where mid = m `div` 2
+        n k = pred m - k
+        x = 2 * (xNew `rem` (m `div` 2))
+        y = 2 * (yNew `rem` (m `div` 2))
+             
+
+reduce :: Array 
+
+{-
+landscape :: Pixel p => (Int,Int) -> Int -> Int -> p -> (Int, Int)
+landscape (m,n) x' y' p =
+  let x = 2 * (x' `rem` (m `div` 2))
+      y = 2 * (y' `rem` (n `div` 2))
+   in case ( x' <= m `div` 2 , y' <= n `div` 2 )
+        of ( True,  True) -> (     x,      y)
+           ( True, False) -> (negY y,      x)
+           (False, False) -> (negX x, negY y)
+           (False,  True) -> (     y, negX x)
+  where negX x = (negate (x - m `div` 2)) + m `div` 2
+        negY y = (negate (y - n `div` 2)) + n `div` 2
+-}
+
+main = do
+  img <- liftM head getArgs >>= readImage
+  mapM_ (\(j,pic) -> savePngImage (show j ++ ".jpg") pic)
+    $ zip [0..100]
+    $ either error (iterate (dynamicPixelMap sow)) img
+
+      {-
+instance (IArray UArray e, Ix i) => Ixed (UArray i e) where
+  ix i f arr
+    | inRange (bounds arr) i = f (arr Array.! i) <&> \e -> arr Array.// [(i,e)]
+    | otherwise              = pure arr
+  {-# INLINE ix #-}
+
+instance (Pixel p) => Ixed (Image p) where
+  ix i f img
+    | inRange (bounds arr) i = f (pixelAt img i) <&> \e -> arr Array.// [(i,e)]
+    | otherwise              = pure arr
+  {-# INLINE ix #-}
+-}

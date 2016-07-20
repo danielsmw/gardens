@@ -1,0 +1,23 @@
+
+./app/Main.hs,227
+module Main Main0,1
+sow sow8,9
+sow sow9,10
+downscaleForward downscaleForward15,16
+downscaleForward downscaleForward16,17
+landscape landscape20,21
+landscape landscape21,22
+main main46,47
+instance instance59,60
+
+./Setup.hs,15
+main main1,2
+
+./src/Lib.hs,65
+module LibLib0,1
+someFunc someFunc4,5
+someFunc someFunc5,6
+
+./test/Spec.hs,30
+main main0,1
+main main1,2
