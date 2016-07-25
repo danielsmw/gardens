@@ -21,9 +21,9 @@ downscaleForward (xOld, yOld)
 landscape :: Int -> (Int, Int) -> (Int, Int)
 landscape m (xNew, yNew)
   | xNew <= mid && yNew <= mid = (    x,     y)
-  | xNew  > mid && yNew <= mid = (    y, n $ x)
-  | xNew  > mid && yNew  > mid = (n $ x, n $ y)
-  | xNew <= mid && yNew  > mid = (n $ y,     x)
+  | xNew  > mid && yNew <= mid = (    x,     y)
+  | xNew  > mid && yNew  > mid = (    x,     y)
+  | xNew <= mid && yNew  > mid = (    x,     y)
   where mid = m `div` 2
         n k = pred m - k
         x = 2 * ((succ $ xNew) `rem` mid)
@@ -46,7 +46,7 @@ landscape (m,n) x' y' p =
 
 main = do
   img <- liftM head getArgs >>= readImage
-  mapM_ (\(j,pic) -> savePngImage (show j ++ ".jpg") pic)
+  mapM_ (\(j,pic) -> savePngImage (show j ++ ".png") pic)
     $ zip [0..100]
     $ either error (iterate (dynamicPixelMap sow)) img
 

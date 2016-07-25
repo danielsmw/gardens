@@ -22,7 +22,7 @@ library
 executable gardens-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:         -threaded -rtsopts -O2 -fllvm -pgmlo opt-3.5 -pgmlc llc-3.5
   build-depends:       base
                      , gardens
                      , gtk3
