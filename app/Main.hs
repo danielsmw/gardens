@@ -21,9 +21,9 @@ downscaleForward (xOld, yOld)
 landscape :: Int -> (Int, Int) -> (Int, Int)
 landscape m (xNew, yNew)
   | xNew <= mid && yNew <= mid = (    x,     y)
-  | xNew  > mid && yNew <= mid = (n $ y,     x)
+  | xNew  > mid && yNew <= mid = (    y, n $ x)
   | xNew  > mid && yNew  > mid = (n $ x, n $ y)
-  | xNew <= mid && yNew  > mid = (    y, n $ x)
+  | xNew <= mid && yNew  > mid = (n $ y,     x)
   where mid = m `div` 2
         n k = pred m - k
         x = 2 * ((succ $ xNew) `rem` mid)
